@@ -1,0 +1,10 @@
+{
+  "name": "joey-birthday-game",
+  "version": "0.1.0",
+  "description": "A Frogger-style birthday game for Joey",
+  "type": "module",
+  "scripts": {
+    "test": "node tests/runtime-check.mjs",
+    "test:smoke": "node tests/smoke.mjs"
+  }
+}

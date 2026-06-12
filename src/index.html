@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Joey - The Game</title>
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <main class="game-shell" aria-label="Joey - The Game">
+      <section class="canvas-wrap">
+        <canvas id="gameCanvas" width="900" height="720" aria-label="Joey game canvas"></canvas>
+        <nav class="touch-pad" aria-label="Touch controls">
+          <button type="button" data-dir="up" aria-label="Move up">▲</button>
+          <button type="button" data-dir="left" aria-label="Move left">◀</button>
+          <button type="button" data-dir="down" aria-label="Move down">▼</button>
+          <button type="button" data-dir="right" aria-label="Move right">▶</button>
+        </nav>
+      </section>
+    </main>
+
+    <script src="./levels.js"></script>
+    <script src="./entities.js"></script>
+    <script src="./ui.js"></script>
+    <script src="./game.js"></script>
+  </body>
+</html>

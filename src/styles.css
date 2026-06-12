@@ -1,0 +1,111 @@
+:root {
+  --ink: #26324a;
+  --paper: #fff9df;
+  --sun: #ffd35a;
+  --melon: #ff6f61;
+  --leaf: #5fc97b;
+  --sky: #6ecbff;
+  --shadow: 0 24px 70px rgba(38, 50, 74, 0.22);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  color: var(--ink);
+  font-family: "Trebuchet MS", Verdana, sans-serif;
+  background:
+    radial-gradient(circle at 18% 12%, rgba(255, 211, 90, 0.55), transparent 20rem),
+    radial-gradient(circle at 90% 18%, rgba(95, 201, 123, 0.35), transparent 18rem),
+    linear-gradient(135deg, #fef4bd 0%, #8be0ff 50%, #ffb1a8 100%);
+}
+
+button {
+  font: inherit;
+}
+
+.game-shell {
+  width: min(1100px, calc(100% - 24px));
+  margin: 0 auto;
+  padding: 16px 0 28px;
+}
+
+.touch-pad button {
+  border: 3px solid var(--ink);
+  color: var(--ink);
+  background: var(--paper);
+  box-shadow: 4px 4px 0 var(--ink);
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.canvas-wrap {
+  display: grid;
+  gap: 14px;
+}
+
+canvas {
+  width: 100%;
+  max-height: calc(100vh - 42px);
+  aspect-ratio: 5 / 4;
+  display: block;
+  border: 4px solid var(--ink);
+  background: var(--sky);
+  box-shadow: var(--shadow);
+  image-rendering: auto;
+}
+
+.touch-pad {
+  width: min(310px, 100%);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.touch-pad button {
+  min-height: 54px;
+  border-radius: 8px;
+  font-size: 1.35rem;
+  touch-action: manipulation;
+}
+
+.touch-pad [data-dir="up"] {
+  grid-column: 2;
+}
+
+.touch-pad [data-dir="left"] {
+  grid-column: 1;
+}
+
+.touch-pad [data-dir="down"] {
+  grid-column: 2;
+}
+
+.touch-pad [data-dir="right"] {
+  grid-column: 3;
+}
+
+@media (min-width: 760px) {
+  .touch-pad {
+    display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .game-shell {
+    width: min(100% - 14px, 1100px);
+    padding-top: 10px;
+  }
+
+  canvas {
+    max-height: calc(100vh - 166px);
+  }
+}
