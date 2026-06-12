@@ -109,8 +109,10 @@ class JoeyGame {
     level.rows.forEach((row, rowIndex) => {
       const y = this.GRID_TOP + rowIndex * this.grid.cellH + 8;
       if (row.logs) {
+        const maxLogW = Math.max(...row.logs.map((l) => l.w));
+        const rowStride = this.canvas.width + maxLogW * 2 + 32;
         row.logs.forEach((log) => {
-          this.logs.push(new Log({ x: log.x, y, w: log.w, h: this.grid.cellH - 16, speed: row.speed, kind: "log" }));
+          this.logs.push(new Log({ x: log.x, y, w: log.w, h: this.grid.cellH - 16, speed: row.speed, kind: "log", stride: rowStride }));
         });
       }
       if (row.hazards) {

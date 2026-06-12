@@ -85,20 +85,50 @@ class Snake extends Entity {
 }
 
 class Log extends Entity {
+  constructor(args) {
+    super(args);
+    this.stride = args.stride;
+  }
+
+  update(dt, width) {
+    this.x += this.speed * dt;
+    this.phase += dt * 8;
+    if (this.speed > 0 && this.x > width + this.w) this.x -= this.stride;
+    if (this.speed < 0 && this.x < -this.w) this.x += this.stride;
+  }
+
   draw(ctx) {
     ctx.save();
     ctx.translate(this.x, this.y);
     roundRect(ctx, 0, 13, this.w, this.h - 22, 18, "#a96b35");
-    ctx.fillStyle = "#7f4b2c";
-    for (let x = 16; x < this.w; x += 34) {
-      ctx.fillRect(x, 20 + Math.sin(this.phase + x) * 2, 16, 4);
+
+    ctx.strokeStyle = "#7f4b2c";
+    ctx.lineWidth = 1.5;
+    for (let gy = 22; gy < this.h - 15; gy += 7) {
+      const bend = Math.floor((gy - 22) / 7) % 2 === 0 ? 3 : -3;
+      ctx.beginPath();
+      ctx.moveTo(22, gy);
+      ctx.quadraticCurveTo(this.w / 2, gy + bend, this.w - 22, gy);
+      ctx.stroke();
     }
-    ctx.strokeStyle = "#5d3624";
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.arc(18, this.h / 2, 12, 0, Math.PI * 2);
-    ctx.arc(this.w - 18, this.h / 2, 12, 0, Math.PI * 2);
-    ctx.stroke();
+
+    const cy = this.h / 2;
+    for (const ex of [18, this.w - 18]) {
+      ctx.fillStyle = "#8b4e2a";
+      ctx.beginPath();
+      ctx.arc(ex, cy, 13, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = "#5d3624";
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(ex, cy, 7, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(ex, cy, 3, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+
     ctx.restore();
   }
 }
