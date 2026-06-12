@@ -2,11 +2,13 @@ class JoeyGame {
   constructor() {
     this.canvas = document.querySelector("#gameCanvas");
     this.ctx = this.canvas.getContext("2d");
+    this.GRID_TOP = 72;
     this.grid = {
       cols: 10,
       rows: 9,
       cellW: this.canvas.width / 10,
-      cellH: this.canvas.height / 9,
+      cellH: (this.canvas.height - this.GRID_TOP) / 9,
+      top: this.GRID_TOP,
     };
     this.state = "title";
     this.levelIndex = 0;
@@ -105,7 +107,7 @@ class JoeyGame {
     this.player.reset();
     const level = LEVELS[index];
     level.rows.forEach((row, rowIndex) => {
-      const y = rowIndex * this.grid.cellH + 8;
+      const y = this.GRID_TOP + rowIndex * this.grid.cellH + 8;
       if (row.logs) {
         row.logs.forEach((log) => {
           this.logs.push(new Log({ x: log.x, y, w: log.w, h: this.grid.cellH - 16, speed: row.speed, kind: "log" }));
@@ -218,7 +220,7 @@ class JoeyGame {
       this.state = "gameOver";
     } else {
       this.player.reset();
-      this.ui.addFloatingText("Try again!", 450, 356, "#ff637d");
+      this.ui.addFloatingText("Try again!", 450, 356 + this.GRID_TOP, "#ff637d");
     }
   }
 
@@ -262,7 +264,7 @@ class JoeyGame {
     ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
     level.rows.forEach((row, rowIndex) => {
-      const y = rowIndex * this.grid.cellH;
+      const y = this.GRID_TOP + rowIndex * this.grid.cellH;
       if (row.type === "road") this.drawRoad(y, level.palette.road);
       else if (row.type === "river") this.drawRiver(y, level.palette.river);
       else this.drawGrass(y, row.type === "safe" ? level.palette.safe : level.palette.grass);
@@ -321,14 +323,14 @@ class JoeyGame {
     } else if (this.levelIndex === 1) {
       for (let x = 40; x < 900; x += 130) {
         ctx.fillStyle = "#46347b";
-        ctx.fillRect(x, 84, 22, 54);
+        ctx.fillRect(x, 84 + this.GRID_TOP, 22, 54);
         ctx.fillStyle = level.palette.accent;
         ctx.beginPath();
-        ctx.arc(x + 11, 80, 28, Math.PI, 0);
+        ctx.arc(x + 11, 80 + this.GRID_TOP, 28, Math.PI, 0);
         ctx.fill();
         ctx.fillStyle = "#ff83cc";
         ctx.beginPath();
-        ctx.arc(x + 8, 98, 5, 0, Math.PI * 2);
+        ctx.arc(x + 8, 98 + this.GRID_TOP, 5, 0, Math.PI * 2);
         ctx.fill();
       }
     } else {
@@ -336,8 +338,8 @@ class JoeyGame {
         ctx.strokeStyle = ["#ff637d", "#35c4e8", "#56d68a"][Math.floor(x / 70) % 3];
         ctx.lineWidth = 5;
         ctx.beginPath();
-        ctx.moveTo(x, 18);
-        ctx.quadraticCurveTo(x + 28, 42, x + 56, 18);
+        ctx.moveTo(x, 18 + this.GRID_TOP);
+        ctx.quadraticCurveTo(x + 28, 42 + this.GRID_TOP, x + 56, 18 + this.GRID_TOP);
         ctx.stroke();
       }
     }

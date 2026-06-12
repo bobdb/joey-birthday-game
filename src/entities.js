@@ -339,7 +339,7 @@ class JoeyPlayer {
     this.col = Math.floor(grid.cols / 2);
     this.row = grid.rows - 1;
     this.x = this.col * grid.cellW + grid.cellW / 2;
-    this.y = this.row * grid.cellH + grid.cellH / 2;
+    this.y = (grid.top || 0) + this.row * grid.cellH + grid.cellH / 2;
     this.fromX = this.x;
     this.fromY = this.y;
     this.toX = this.x;
@@ -357,7 +357,7 @@ class JoeyPlayer {
 
   snap() {
     this.x = this.col * this.grid.cellW + this.grid.cellW / 2;
-    this.y = this.row * this.grid.cellH + this.grid.cellH / 2;
+    this.y = (this.grid.top || 0) + this.row * this.grid.cellH + this.grid.cellH / 2;
     this.fromX = this.x;
     this.fromY = this.y;
     this.toX = this.x;
@@ -375,7 +375,7 @@ class JoeyPlayer {
     this.fromX = this.x;
     this.fromY = this.y;
     this.toX = this.col * this.grid.cellW + this.grid.cellW / 2;
-    this.toY = this.row * this.grid.cellH + this.grid.cellH / 2;
+    this.toY = (this.grid.top || 0) + this.row * this.grid.cellH + this.grid.cellH / 2;
     this.hopTime = 0;
     return true;
   }

@@ -29,9 +29,10 @@ class GameUI {
     ctx.stroke();
     ctx.fillStyle = "#26324a";
     ctx.font = "900 19px Trebuchet MS";
-    ctx.fillText(`Level ${levelIndex + 1}: ${level.name}`, 32, 45);
-    ctx.fillText(`Score ${score}`, 382, 45);
-    ctx.fillText(`Lives ${"♥".repeat(lives)}`, 690, 45);
+    ctx.textAlign = "center";
+    ctx.fillText(`Level ${levelIndex + 1}: ${level.name}`, 160, 45);
+    ctx.fillText(`Score ${score}`, 450, 45);
+    ctx.fillText(`Lives ${"♥".repeat(lives)}`, 739, 45);
     ctx.restore();
   }
 
@@ -39,10 +40,6 @@ class GameUI {
     drawSoftBackdrop(ctx, "#78d8ff", "#87d96a");
     drawClouds(ctx, time);
     drawPanel(ctx, 150, 58, 600, 590, "#fff9df");
-    ctx.fillStyle = "#d3445d";
-    ctx.font = "900 18px Trebuchet MS";
-    ctx.textAlign = "center";
-    ctx.fillText("HOP QUEST", 450, 103);
     ctx.fillStyle = "#ff6f61";
     ctx.font = "900 76px Impact";
     ctx.fillText("JOEY - THE GAME", 450, 165);
@@ -99,14 +96,14 @@ class GameUI {
   }
 
   drawVictory(ctx, time) {
-    const rainbow = ctx.createLinearGradient(0, 0, 900, 720);
+    const rainbow = ctx.createLinearGradient(0, 0, 900, 792);
     rainbow.addColorStop(0, "#ff637d");
     rainbow.addColorStop(0.22, "#ffcf4d");
     rainbow.addColorStop(0.45, "#56d68a");
     rainbow.addColorStop(0.7, "#35c4e8");
     rainbow.addColorStop(1, "#8f6cff");
     ctx.fillStyle = rainbow;
-    ctx.fillRect(0, 0, 900, 720);
+    ctx.fillRect(0, 0, 900, 792);
     drawCelebrationBits(ctx, time);
     drawSurpriseParty(ctx, 450, 395, time);
     ctx.textAlign = "center";
@@ -147,7 +144,7 @@ class GameUI {
 
   drawDim(ctx) {
     ctx.fillStyle = "rgba(38, 50, 74, 0.48)";
-    ctx.fillRect(0, 0, 900, 720);
+    ctx.fillRect(0, 0, 900, 792);
   }
 }
 
@@ -163,9 +160,9 @@ function drawPanel(ctx, x, y, w, h, fill, radius = 18) {
 
 function drawSoftBackdrop(ctx, sky, ground) {
   ctx.fillStyle = sky;
-  ctx.fillRect(0, 0, 900, 720);
+  ctx.fillRect(0, 0, 900, 792);
   ctx.fillStyle = ground;
-  ctx.fillRect(0, 520, 900, 200);
+  ctx.fillRect(0, 592, 900, 200);
   ctx.fillStyle = "rgba(255,255,255,0.38)";
   for (let i = 0; i < 18; i += 1) {
     ctx.beginPath();
