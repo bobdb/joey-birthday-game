@@ -105,17 +105,47 @@ class GameUI {
     ctx.fillStyle = rainbow;
     ctx.fillRect(0, 0, 900, 792);
     drawCelebrationBits(ctx, time);
+    drawCongaLine(ctx, 450, 350, time);
     drawSurpriseParty(ctx, 450, 395, time);
-    ctx.textAlign = "center";
-    ctx.fillStyle = "#fff9df";
-    ctx.font = "900 82px Impact";
+
+    ctx.save();
     ctx.strokeStyle = "#26324a";
-    ctx.lineWidth = 8;
-    ctx.strokeText("You Win!", 450, 105);
-    ctx.fillText("You Win!", 450, 105);
-    ctx.font = "900 32px Trebuchet MS";
-    ctx.strokeText("Great Job Joey!", 450, 153);
-    ctx.fillText("Great Job Joey!", 450, 153);
+    ctx.lineWidth = 9;
+
+    // "Happy 3rd Birthday" — word by word in different colors
+    ctx.textAlign = "left";
+    ctx.font = "900 54px Impact";
+    const titleWords = [["Happy ", "#ff637d"], ["3rd ", "#ffcf4d"], ["Birthday", "#56d68a"]];
+    const titleW = titleWords.reduce((a, [t]) => a + ctx.measureText(t).width, 0);
+    let tx = 450 - titleW / 2;
+    titleWords.forEach(([word, color]) => {
+      ctx.fillStyle = color;
+      ctx.strokeText(word, tx, 185);
+      ctx.fillText(word, tx, 185);
+      tx += ctx.measureText(word).width;
+    });
+
+    // "Joey!!!" — letter by letter, bouncing, rainbow
+    ctx.font = "900 80px Impact";
+    const joeyStr = "Joey!!!";
+    const jColors = ["#ff637d", "#ffcf4d", "#56d68a", "#35c4e8", "#8f6cff", "#ff637d", "#ffcf4d"];
+    const joeyW = [...joeyStr].reduce((a, c) => a + ctx.measureText(c).width, 0);
+    let jx = 450 - joeyW / 2;
+    [...joeyStr].forEach((ch, i) => {
+      const bounce = Math.sin(time * 6 + i * 0.9) * 10;
+      const cw = ctx.measureText(ch).width;
+      ctx.fillStyle = jColors[i % jColors.length];
+      ctx.strokeText(ch, jx, 280 + bounce);
+      ctx.fillText(ch, jx, 280 + bounce);
+      jx += cw;
+    });
+    ctx.restore();
+
+    // 4 dancing squirrels flanking the replay button
+    [120, 260, 640, 780].forEach((sx, i) => {
+      drawDancingSquirrel(ctx, sx, 748, time, i * 1.6, 0.82);
+    });
+
     this.drawButton(ctx, 322, 620, 256, 58, "Replay");
   }
 
@@ -238,12 +268,6 @@ function drawCelebrationBits(ctx, time) {
 function drawSurpriseParty(ctx, x, y, time) {
   ctx.save();
   ctx.translate(x, y);
-  drawPanel(ctx, -260, 54, 520, 78, "#56d68a", 26);
-  drawPanel(ctx, -230, -78, 460, 98, "#fff9df", 18);
-  ctx.fillStyle = "#26324a";
-  ctx.font = "900 42px Trebuchet MS";
-  ctx.textAlign = "center";
-  ctx.fillText("SURPRISE!", 0, -18);
   for (let i = -3; i <= 3; i += 1) {
     const px = i * 68;
     ctx.fillStyle = ["#ff637d", "#ffcf4d", "#35c4e8", "#8f6cff"][Math.abs(i) % 4];
@@ -262,5 +286,278 @@ function drawSurpriseParty(ctx, x, y, time) {
     ctx.arc(px, 66, 7, 0.15, Math.PI - 0.15);
     ctx.stroke();
   }
+  ctx.restore();
+}
+
+function drawDancingSquirrel(ctx, cx, cy, time, phase, scale = 1) {
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.scale(scale, scale);
+  ctx.rotate(Math.sin(time * 5 + phase) * 0.13);
+
+  const brown = "#8B5A2B", tan = "#D2A679", dark = "#3a1a00";
+
+  // Big bushy tail (behind body) — layered strokes for fluffy look
+  ctx.lineCap = "round"; ctx.lineJoin = "round";
+  ctx.strokeStyle = "#7a4010"; ctx.lineWidth = 36;
+  ctx.beginPath(); ctx.moveTo(4, -4); ctx.bezierCurveTo(44, -2, 68, -50, 42, -88); ctx.stroke();
+  ctx.strokeStyle = "#c8720a"; ctx.lineWidth = 28;
+  ctx.beginPath(); ctx.moveTo(4, -4); ctx.bezierCurveTo(44, -2, 68, -50, 42, -88); ctx.stroke();
+  ctx.strokeStyle = "#f0a030"; ctx.lineWidth = 16;
+  ctx.beginPath(); ctx.moveTo(4, -4); ctx.bezierCurveTo(42, -4, 64, -48, 38, -84); ctx.stroke();
+  ctx.strokeStyle = "#ffd060"; ctx.lineWidth = 8;
+  ctx.beginPath(); ctx.moveTo(5, -8); ctx.bezierCurveTo(38, -8, 58, -44, 34, -78); ctx.stroke();
+
+  // Body
+  ctx.fillStyle = brown; ctx.strokeStyle = dark; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.ellipse(0, -20, 13, 20, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = tan;
+  ctx.beginPath(); ctx.ellipse(0, -18, 6, 12, 0, 0, Math.PI * 2); ctx.fill();
+
+  // Head — slightly elongated snout
+  ctx.fillStyle = brown; ctx.strokeStyle = dark; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.ellipse(0, -43, 12, 14, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+
+  // Puffy cheeks (acorn storage)
+  ctx.fillStyle = tan;
+  ctx.beginPath(); ctx.ellipse(-11, -40, 7, 5, -0.3, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(11, -40, 7, 5, 0.3, 0, Math.PI * 2); ctx.fill();
+
+  // Pointed ears with tufts
+  ctx.fillStyle = brown; ctx.strokeStyle = dark; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(-7, -54); ctx.lineTo(-14, -72); ctx.lineTo(-1, -58); ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(7, -54); ctx.lineTo(14, -72); ctx.lineTo(1, -58); ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = "#ffaaaa";
+  ctx.beginPath(); ctx.moveTo(-6, -55); ctx.lineTo(-11, -68); ctx.lineTo(-2, -58); ctx.closePath(); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(6, -55); ctx.lineTo(11, -68); ctx.lineTo(2, -58); ctx.closePath(); ctx.fill();
+
+  // Sunglasses
+  ctx.fillStyle = "#111"; ctx.strokeStyle = "#666"; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.ellipse(-5.5, -44, 5, 3.5, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+  ctx.beginPath(); ctx.ellipse(5.5, -44, 5, 3.5, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+  ctx.strokeStyle = "#666"; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(-0.5, -44); ctx.lineTo(0.5, -44); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(-10.5, -44); ctx.lineTo(-13, -43); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(10.5, -44); ctx.lineTo(13, -43); ctx.stroke();
+  ctx.fillStyle = "rgba(255,255,255,0.28)";
+  ctx.beginPath(); ctx.ellipse(-7, -45.5, 2, 1.2, -0.3, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(4, -45.5, 2, 1.2, -0.3, 0, Math.PI * 2); ctx.fill();
+
+  // Nose + smile
+  ctx.fillStyle = "#ff7070";
+  ctx.beginPath(); ctx.arc(0, -36, 2.5, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = dark; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.arc(0, -33, 4, 0.15, Math.PI - 0.15); ctx.stroke();
+
+  // Electric guitar
+  ctx.save();
+  ctx.translate(11, -20);
+  ctx.rotate(0.45 + Math.sin(time * 5 + phase + Math.PI) * 0.12);
+  ctx.fillStyle = "#cc2200"; ctx.strokeStyle = "#660000"; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.arc(0, 0, 9, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+  ctx.beginPath(); ctx.arc(0, -12, 7, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = "#cc2200"; ctx.fillRect(-8.5, -12, 17, 12);
+  ctx.fillStyle = "#880000";
+  ctx.beginPath(); ctx.ellipse(3, -4, 3.5, 6, 0.3, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = "#7a4020"; ctx.strokeStyle = dark; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.rect(-2, -12, 4, -24); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = "#5a2f10";
+  ctx.beginPath(); ctx.rect(-3.5, -36, 7, -7); ctx.fill(); ctx.stroke();
+  ctx.strokeStyle = "#bbb"; ctx.lineWidth = 0.7;
+  [0, 1, 2, 3].forEach(f => { ctx.beginPath(); ctx.moveTo(-2, -13 - f * 5); ctx.lineTo(2, -13 - f * 5); ctx.stroke(); });
+  ctx.strokeStyle = "#ddd"; ctx.lineWidth = 0.55;
+  [-1, 0, 1].forEach(s => { ctx.beginPath(); ctx.moveTo(s, 8); ctx.lineTo(s, -42); ctx.stroke(); });
+  ctx.restore();
+
+  // Arms
+  ctx.strokeStyle = brown; ctx.lineWidth = 5; ctx.lineCap = "round";
+  ctx.beginPath(); ctx.moveTo(-10, -28); ctx.quadraticCurveTo(-4, -16, 6, -14); ctx.stroke();
+  ctx.save();
+  ctx.translate(9, -24); ctx.rotate(Math.sin(time * 8 + phase) * 0.35);
+  ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(7, 8); ctx.stroke();
+  ctx.restore();
+
+  // Legs + feet
+  const kick = Math.sin(time * 5 + phase);
+  ctx.strokeStyle = brown; ctx.lineWidth = 5; ctx.lineCap = "round";
+  ctx.beginPath();
+  ctx.moveTo(-5, -3); ctx.lineTo(-7 + kick * 6, 13);
+  ctx.moveTo(5, -3); ctx.lineTo(7 - kick * 6, 13);
+  ctx.stroke();
+  ctx.strokeStyle = dark; ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(-7 + kick * 6, 13); ctx.lineTo(-14 + kick * 7, 14);
+  ctx.moveTo(7 - kick * 6, 13); ctx.lineTo(14 - kick * 7, 14);
+  ctx.stroke();
+
+  ctx.restore();
+}
+
+function drawCongaLine(ctx, cx, cy, time) {
+  const spacing = 88;
+  const types = ["cat", "dog", "cat", "dog"];
+  for (let i = 0; i < 4; i++) {
+    const phase = i * 0.85;
+    const sway = Math.sin(time * 2.4 + phase) * 22;
+    const bob = Math.abs(Math.sin(time * 2.4 + phase)) * 10;
+    const ax = cx + (i - 1.5) * spacing + sway;
+    const ay = cy - bob;
+    if (types[i] === "cat") drawCongaCat(ctx, ax, ay, time, phase);
+    else drawCongaDog(ctx, ax, ay, time, phase);
+  }
+}
+
+function drawCongaCat(ctx, cx, cy, time, phase) {
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(Math.sin(time * 2.4 + phase) * 0.2);
+
+  const body = "#e88820", stripe = "#b05a10", dark = "#3a1a00", belly = "#fde8b0";
+  const step = Math.sin(time * 2.4 + phase);
+
+  // Tail curling up
+  ctx.lineCap = "round"; ctx.strokeStyle = body; ctx.lineWidth = 7;
+  ctx.beginPath(); ctx.moveTo(-6, 18); ctx.bezierCurveTo(-28, 8, -30, -22, -16, -28); ctx.bezierCurveTo(-6, -34, 2, -26, -2, -20); ctx.stroke();
+  ctx.strokeStyle = stripe; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(-6, 18); ctx.bezierCurveTo(-25, 6, -26, -18, -14, -24); ctx.stroke();
+
+  // Body
+  ctx.fillStyle = body; ctx.strokeStyle = dark; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.ellipse(0, 8, 12, 16, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = belly;
+  ctx.beginPath(); ctx.ellipse(0, 10, 6, 9, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = stripe; ctx.lineWidth = 1.5;
+  [4, 10, 16].forEach(sy => {
+    ctx.beginPath(); ctx.moveTo(-11, sy); ctx.lineTo(-5, sy + 1); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(11, sy); ctx.lineTo(5, sy + 1); ctx.stroke();
+  });
+
+  // Head
+  ctx.fillStyle = body; ctx.strokeStyle = dark; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.arc(0, -18, 13, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+
+  // Pointy ears
+  ctx.fillStyle = body;
+  ctx.beginPath(); ctx.moveTo(-7, -27); ctx.lineTo(-14, -44); ctx.lineTo(-2, -30); ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(7, -27); ctx.lineTo(14, -44); ctx.lineTo(2, -30); ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = "#ffbbbb";
+  ctx.beginPath(); ctx.moveTo(-6, -29); ctx.lineTo(-11, -41); ctx.lineTo(-3, -31); ctx.closePath(); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(6, -29); ctx.lineTo(11, -41); ctx.lineTo(3, -31); ctx.closePath(); ctx.fill();
+
+  // Eyes
+  ctx.fillStyle = "#56d68a"; ctx.strokeStyle = dark; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.ellipse(-5, -19, 4.5, 3, -0.15, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+  ctx.beginPath(); ctx.ellipse(5, -19, 4.5, 3, 0.15, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = "#111";
+  ctx.beginPath(); ctx.ellipse(-5, -19, 1.5, 2.5, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(5, -19, 1.5, 2.5, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = "rgba(255,255,255,0.5)";
+  ctx.beginPath(); ctx.arc(-6.5, -20.5, 1, 0, Math.PI * 2); ctx.fill();
+
+  // Nose + whiskers + smile
+  ctx.fillStyle = "#ff9999";
+  ctx.beginPath(); ctx.moveTo(-2, -13); ctx.lineTo(2, -13); ctx.lineTo(0, -11); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle = "rgba(200,200,200,0.9)"; ctx.lineWidth = 1;
+  [[-14, -15, -5, -14], [-14, -12, -5, -12], [5, -14, 14, -15], [5, -12, 14, -12]].forEach(([x1, y1, x2, y2]) => {
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+  });
+  ctx.strokeStyle = dark; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.arc(0, -9, 4, 0.15, Math.PI - 0.15); ctx.stroke();
+
+  // Arms
+  ctx.strokeStyle = body; ctx.lineWidth = 4; ctx.lineCap = "round";
+  ctx.beginPath(); ctx.moveTo(-10, -5); ctx.lineTo(-18 + step * 6, -14); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(10, -5); ctx.lineTo(18 - step * 6, -14); ctx.stroke();
+
+  // Legs + paws
+  ctx.strokeStyle = body; ctx.lineWidth = 4;
+  ctx.beginPath();
+  ctx.moveTo(-5, 21); ctx.lineTo(-6 + step * 8, 36);
+  ctx.moveTo(5, 21); ctx.lineTo(6 - step * 8, 36);
+  ctx.stroke();
+  ctx.fillStyle = body; ctx.strokeStyle = dark; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.ellipse(-6 + step * 8, 38, 5, 3, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+  ctx.beginPath(); ctx.ellipse(6 - step * 8, 38, 5, 3, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+
+  ctx.restore();
+}
+
+function drawCongaDog(ctx, cx, cy, time, phase) {
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(Math.sin(time * 2.4 + phase) * 0.2);
+
+  const body = "#c89040", spot = "#7a4820", dark = "#3a1a00", belly = "#e8d090";
+  const step = Math.sin(time * 2.4 + phase);
+
+  // Wagging tail
+  const wag = Math.sin(time * 6 + phase) * 0.55;
+  ctx.save();
+  ctx.translate(12, 4);
+  ctx.rotate(-0.4 + wag);
+  ctx.strokeStyle = body; ctx.lineWidth = 8; ctx.lineCap = "round";
+  ctx.beginPath(); ctx.moveTo(0, 0); ctx.quadraticCurveTo(12, -8, 14, -24); ctx.stroke();
+  ctx.strokeStyle = belly; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(0, 0); ctx.quadraticCurveTo(10, -6, 12, -20); ctx.stroke();
+  ctx.restore();
+
+  // Body
+  ctx.fillStyle = body; ctx.strokeStyle = dark; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.ellipse(0, 8, 13, 16, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = belly;
+  ctx.beginPath(); ctx.ellipse(0, 10, 7, 10, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = spot;
+  ctx.beginPath(); ctx.ellipse(-7, 3, 5, 4, 0.4, 0, Math.PI * 2); ctx.fill();
+
+  // Head
+  ctx.fillStyle = body; ctx.strokeStyle = dark; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.arc(0, -18, 14, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+
+  // Floppy ears
+  ctx.fillStyle = spot;
+  ctx.beginPath(); ctx.ellipse(-15, -13, 6, 10, -0.3, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+  ctx.beginPath(); ctx.ellipse(15, -13, 6, 10, 0.3, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+
+  // Eyes
+  ctx.fillStyle = "#fff"; ctx.strokeStyle = dark; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.arc(-5, -20, 5, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+  ctx.beginPath(); ctx.arc(5, -20, 5, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = "#35c4e8";
+  ctx.beginPath(); ctx.arc(-5, -20, 3, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(5, -20, 3, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = "#111";
+  ctx.beginPath(); ctx.arc(-5, -20, 1.5, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(5, -20, 1.5, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = "rgba(255,255,255,0.7)";
+  ctx.beginPath(); ctx.arc(-6.5, -21.5, 1, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(3.5, -21.5, 1, 0, Math.PI * 2); ctx.fill();
+
+  // Nose
+  ctx.fillStyle = "#444";
+  ctx.beginPath(); ctx.ellipse(0, -12, 4, 3, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = "rgba(255,255,255,0.4)";
+  ctx.beginPath(); ctx.ellipse(-1.5, -13, 1.5, 1, 0, 0, Math.PI * 2); ctx.fill();
+
+  // Tongue
+  ctx.fillStyle = "#ff7070";
+  ctx.beginPath(); ctx.ellipse(0, -6, 4, 5, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = dark; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(0, -6); ctx.lineTo(0, -3); ctx.stroke();
+
+  // Arms
+  ctx.strokeStyle = body; ctx.lineWidth = 4; ctx.lineCap = "round";
+  ctx.beginPath(); ctx.moveTo(-12, -5); ctx.lineTo(-20 + step * 6, -13); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(12, -5); ctx.lineTo(20 - step * 6, -13); ctx.stroke();
+
+  // Legs + paws
+  ctx.strokeStyle = body; ctx.lineWidth = 4;
+  ctx.beginPath();
+  ctx.moveTo(-5, 21); ctx.lineTo(-7 + step * 8, 36);
+  ctx.moveTo(5, 21); ctx.lineTo(7 - step * 8, 36);
+  ctx.stroke();
+  ctx.fillStyle = body; ctx.strokeStyle = dark; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.ellipse(-7 + step * 8, 38, 5, 3, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+  ctx.beginPath(); ctx.ellipse(7 - step * 8, 38, 5, 3, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+
   ctx.restore();
 }

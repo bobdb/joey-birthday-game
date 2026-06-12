@@ -351,7 +351,7 @@ class JoeyGame {
 class TinyAudio {
   constructor() {
     this.ctx = null;
-    this.muted = false;
+    this.muted = true;
     this.musicTimer = null;
     this.musicStep = 0;
     this.melody = [

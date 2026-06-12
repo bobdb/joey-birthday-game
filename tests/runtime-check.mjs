@@ -23,6 +23,8 @@ const ctx = {
   moveTo: noop,
   lineTo: noop,
   quadraticCurveTo: noop,
+  bezierCurveTo: noop,
+  rect: noop,
   arc: noop,
   ellipse: noop,
   fill: noop,
@@ -35,6 +37,7 @@ const ctx = {
   fillText: noop,
   strokeText: noop,
   roundRect: noop,
+  measureText: (text) => ({ width: text.length * 12 }),
   createLinearGradient: () => ({ addColorStop: noop }),
   getImageData: () => ({ data: [1, 2, 3, 255] }),
 };
