@@ -45,6 +45,8 @@ class JoeyGame {
 
   bindControls() {
     window.addEventListener("keydown", (event) => {
+      if (event.key === "q" || event.key === "Q") { location.reload(); return; }
+      if (event.key === "m" || event.key === "M") { this.toggleMute(); return; }
       const action = KEY_MAP[event.key];
       if (!action) return;
       event.preventDefault();
@@ -60,6 +62,7 @@ class JoeyGame {
 
     this.canvas.addEventListener("pointerdown", (event) => {
       const point = this.toCanvasPoint(event);
+      if (this.hitButton(point, 843, 14, 44, 44)) { this.toggleMute(); return; }
       if (this.state === "playing") return;
       if (this.hitButton(point, 322, 474, 256, 58) && this.state === "title") this.startGame();
       else if (this.hitButton(point, 322, 548, 256, 58) && this.state === "title") this.state = "instructions";
@@ -80,6 +83,18 @@ class JoeyGame {
 
   hitButton(point, x, y, w, h) {
     return point.x >= x && point.x <= x + w && point.y >= y && point.y <= y + h;
+  }
+
+  toggleMute() {
+    this.audio.ensure();
+    this.audio.muted = !this.audio.muted;
+    if (this.audio.muted) {
+      this.audio.stopMusic();
+    } else if (this.state === "victory") {
+      this.audio.startVictoryMusic();
+    } else {
+      this.audio.startMusic();
+    }
   }
 
   activate() {
@@ -230,26 +245,21 @@ class JoeyGame {
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     if (this.state === "title") {
       this.ui.drawTitle(ctx, this.time);
-      return;
-    }
-    if (this.state === "instructions") {
+    } else if (this.state === "instructions") {
       this.ui.drawInstructions(ctx);
-      return;
-    }
-    if (this.state === "victory") {
+    } else if (this.state === "victory") {
       this.ui.drawVictory(ctx, this.time);
-      return;
+    } else {
+      this.drawLevel();
+      this.logs.forEach((log) => log.draw(ctx));
+      this.entities.forEach((entity) => entity.draw(ctx));
+      this.player.draw(ctx);
+      this.ui.drawHud(ctx);
+      this.ui.drawFloaters(ctx);
+      if (this.state === "levelComplete") this.ui.drawLevelComplete(ctx);
+      if (this.state === "gameOver") this.ui.drawGameOver(ctx);
     }
-
-    this.drawLevel();
-    this.logs.forEach((log) => log.draw(ctx));
-    this.entities.forEach((entity) => entity.draw(ctx));
-    this.player.draw(ctx);
-    this.ui.drawHud(ctx);
-    this.ui.drawFloaters(ctx);
-
-    if (this.state === "levelComplete") this.ui.drawLevelComplete(ctx);
-    if (this.state === "gameOver") this.ui.drawGameOver(ctx);
+    this.ui.drawMuteIcon(ctx);
   }
 
   drawLevel() {

@@ -64,17 +64,22 @@ class GameUI {
     ctx.textAlign = "center";
     ctx.font = "900 46px Impact";
     ctx.fillText("How to Play", 450, 180);
-    ctx.font = "900 22px Trebuchet MS";
-    const lines = [
-      "Hop Joey one space at a time.",
-      "Use Arrow Keys, WASD, or the touch buttons.",
+    ctx.font = "900 19px Trebuchet MS";
+    const topLines = [
+      "Use the Arrow Keys to hop Joey around.",
       "Avoid bad stuff.",
       "Logs are safe and carry Joey across water.",
-      "Help Joey hop across.",
-      "Press M to toggle music on or off.",
-      "Each row forward earns points — you never lose any.",
-    ];
-    lines.forEach((line, i) => ctx.fillText(line, 450, 245 + i * 42));
+      "Each move forward wins you points.",
+    ].flatMap((line) => wrapText(ctx, line, 580));
+    const bottomLines = [
+      "Help Joey hop across.  Much like a chicken he needs to get to the other side.  Awesomeness awaits!",
+    ].flatMap((line) => wrapText(ctx, line, 580));
+
+    topLines.forEach((line, i) => ctx.fillText(line, 450, 232 + i * 35));
+    const joeyY = 232 + topLines.length * 35 + 38;
+    drawJoeyMascot(ctx, 450, joeyY, 0.55);
+    const bottomStartY = joeyY + 62;
+    bottomLines.forEach((line, i) => ctx.fillText(line, 450, bottomStartY + i * 35));
     this.drawButton(ctx, 322, 594, 256, 58, "Back");
   }
 
@@ -193,10 +198,79 @@ class GameUI {
     ctx.fillText(text, x + w / 2, y + 37);
   }
 
+  drawMuteIcon(ctx) {
+    const bx = 843, by = 14, bw = 44, bh = 44;
+    ctx.save();
+    ctx.fillStyle = "rgba(255,249,223,0.92)";
+    ctx.strokeStyle = "#26324a";
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.roundRect(bx, by, bw, bh, 8);
+    ctx.fill();
+    ctx.stroke();
+
+    const cx = bx + bw / 2 - 3;
+    const cy = by + bh / 2;
+    const muted = this.game.audio.muted;
+
+    ctx.fillStyle = "#26324a";
+    ctx.beginPath();
+    ctx.moveTo(cx - 9, cy - 5);
+    ctx.lineTo(cx - 3, cy - 5);
+    ctx.lineTo(cx + 4, cy - 11);
+    ctx.lineTo(cx + 4, cy + 11);
+    ctx.lineTo(cx - 3, cy + 5);
+    ctx.lineTo(cx - 9, cy + 5);
+    ctx.closePath();
+    ctx.fill();
+
+    if (muted) {
+      ctx.strokeStyle = "#ff637d";
+      ctx.lineWidth = 2.5;
+      ctx.lineCap = "round";
+      ctx.beginPath();
+      ctx.moveTo(cx + 7, cy - 7);
+      ctx.lineTo(cx + 14, cy + 7);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(cx + 14, cy - 7);
+      ctx.lineTo(cx + 7, cy + 7);
+      ctx.stroke();
+    } else {
+      ctx.strokeStyle = "#26324a";
+      ctx.lineWidth = 2;
+      ctx.lineCap = "round";
+      ctx.beginPath();
+      ctx.arc(cx + 4, cy, 6, -Math.PI * 0.45, Math.PI * 0.45);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(cx + 4, cy, 11, -Math.PI * 0.45, Math.PI * 0.45);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
   drawDim(ctx) {
     ctx.fillStyle = "rgba(38, 50, 74, 0.48)";
     ctx.fillRect(0, 0, 900, 792);
   }
+}
+
+function wrapText(ctx, text, maxWidth) {
+  const words = text.split(" ");
+  const lines = [];
+  let current = "";
+  for (const word of words) {
+    const test = current ? current + " " + word : word;
+    if (ctx.measureText(test).width > maxWidth) {
+      if (current) lines.push(current);
+      current = word;
+    } else {
+      current = test;
+    }
+  }
+  if (current) lines.push(current);
+  return lines;
 }
 
 function drawPanel(ctx, x, y, w, h, fill, radius = 18) {
