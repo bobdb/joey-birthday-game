@@ -4,7 +4,7 @@ A Frogger-style birthday game built with vanilla JavaScript and HTML5 Canvas. He
 
 ## Play
 
-Open `src/index.html` directly in a browser — no build step required.
+Open `docs/index.html` directly in a browser — no build step required.
 
 ## Controls
 
@@ -33,7 +33,7 @@ Open `src/index.html` directly in a browser — no build step required.
 ## Project structure
 
 ```
-src/
+docs/
   index.html   — shell; loads scripts in order
   styles.css   — layout and touch pad styling
   levels.js    — LEVELS array (palette + row definitions)

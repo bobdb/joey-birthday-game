@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project overview
 
-A vanilla-JS browser canvas game — "Joey - The Game" — a Frogger-style hop-across-roads-and-rivers game with three progressively harder levels. No build step; open `src/index.html` directly in a browser.
+A vanilla-JS browser canvas game — "Joey - The Game" — a Frogger-style hop-across-roads-and-rivers game with three progressively harder levels. No build step; open `docs/index.html` directly in a browser.
 
 ## Commands
 
@@ -18,7 +18,7 @@ npm run test:smoke
 
 ## Architecture
 
-All game files are in `src/`. Scripts are loaded by `index.html` in this order and share a single global scope (no ES modules):
+All game files are in `docs/`. Scripts are loaded by `index.html` in this order and share a single global scope (no ES modules):
 
 1. **`levels.js`** — Global `LEVELS` array. Each level has a `palette` object and a `rows` array. Row types: `"start"`, `"safe"`, `"grass"`, `"road"`, `"river"`. Road rows carry `hazards`; river rows carry `logs`.
 

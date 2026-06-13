@@ -3,7 +3,7 @@ import { createRequire } from "node:module";
 const require = createRequire("C:/Users/bobdb/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/package.json");
 const { chromium } = require("playwright");
 
-const target = new URL("../src/index.html", import.meta.url).href;
+const target = new URL("../docs/index.html", import.meta.url).href;
 const browser = await chromium.launch({ headless: true });
 const page = await browser.newPage({ viewport: { width: 1100, height: 900 } });
 const errors = [];
