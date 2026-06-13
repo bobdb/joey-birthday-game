@@ -208,6 +208,7 @@ class JoeyGame {
       this.audio.levelComplete();
       if (this.levelIndex === LEVELS.length - 1) {
         this.state = "victory";
+        this.audio.startVictoryMusic();
         this.audio.fanfare();
       } else {
         this.state = "levelComplete";
@@ -321,7 +322,14 @@ class JoeyGame {
   drawBackgroundDetails(level) {
     const ctx = this.ctx;
     if (this.levelIndex === 0) {
-      drawClouds(ctx, this.time * 0.6);
+      ctx.fillStyle = "#4a7c3f";
+      for (let x = 60; x < 900; x += 120) {
+        ctx.fillRect(x - 5, this.GRID_TOP + 28, 10, 52);
+        ctx.fillRect(x - 23, this.GRID_TOP + 46, 18, 8);
+        ctx.fillRect(x - 23, this.GRID_TOP + 24, 8, 22);
+        ctx.fillRect(x + 5, this.GRID_TOP + 52, 18, 8);
+        ctx.fillRect(x + 15, this.GRID_TOP + 30, 8, 22);
+      }
     } else if (this.levelIndex === 1) {
       for (let x = 40; x < 900; x += 130) {
         ctx.fillStyle = "#46347b";
@@ -359,6 +367,14 @@ class TinyAudio {
       440, 523, 587, 698, 659, 587, 523, 440,
     ];
     this.bass = [196, 196, 220, 220, 174, 174, 196, 196];
+    this.victoryMelody = [
+      523, 659, 784, 1047, 784, 659, 523, 0,
+      659, 784, 880,  784, 659, 523, 587, 659,
+      784, 880, 1047, 880, 784, 659, 784, 880,
+      1047, 880, 784, 659, 523, 523, 523, 0,
+    ];
+    this.victoryBass = [261, 392, 261, 392, 196, 261, 329, 261];
+    this.victoryStep = 0;
   }
 
   ensure() {
@@ -380,10 +396,31 @@ class TinyAudio {
     osc.stop(this.ctx.currentTime + duration);
   }
 
+  stopMusic() {
+    if (this.musicTimer) { window.clearInterval(this.musicTimer); this.musicTimer = null; }
+  }
+
   startMusic() {
-    if (this.musicTimer) return;
+    this.stopMusic();
+    this.musicStep = 0;
     this.playMusicStep();
     this.musicTimer = window.setInterval(() => this.playMusicStep(), 260);
+  }
+
+  startVictoryMusic() {
+    this.stopMusic();
+    this.victoryStep = 0;
+    this.playVictoryStep();
+    this.musicTimer = window.setInterval(() => this.playVictoryStep(), 190);
+  }
+
+  playVictoryStep() {
+    if (this.muted) return;
+    const note = this.victoryMelody[this.victoryStep % this.victoryMelody.length];
+    const bassNote = this.victoryBass[Math.floor(this.victoryStep / 2) % this.victoryBass.length];
+    if (note) this.tone(note, 0.14, "square", 0.015);
+    if (this.victoryStep % 2 === 0) this.tone(bassNote, 0.18, "sine", 0.01);
+    this.victoryStep += 1;
   }
 
   playMusicStep() {

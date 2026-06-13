@@ -335,7 +335,7 @@ class Motorcycle extends Entity {
     ctx.moveTo(this.w * 0.2, this.h - 14);
     ctx.lineTo(this.w * 0.43, this.h * 0.46);
     ctx.lineTo(this.w * 0.66, this.h - 14);
-    ctx.lineTo(this.w * 0.82, this.h - 14);
+    ctx.lineTo(this.w * 0.80, this.h - 14);
     ctx.moveTo(this.w * 0.43, this.h * 0.46);
     ctx.lineTo(this.w * 0.72, this.h * 0.4);
     ctx.lineTo(this.w * 0.86, this.h * 0.26);
@@ -355,9 +355,9 @@ class Motorcycle extends Entity {
     ctx.stroke();
     ctx.strokeStyle = "#26324a";
     ctx.beginPath();
-    ctx.moveTo(this.w * 0.5, this.h * 0.25);
-    ctx.lineTo(this.w * 0.6, this.h * 0.38);
-    ctx.lineTo(this.w * 0.7, this.h * 0.42);
+    ctx.moveTo(this.w * 0.50, this.h * 0.22);
+    ctx.lineTo(this.w * 0.70, this.h * 0.28);
+    ctx.lineTo(this.w * 0.84, this.h * 0.20);
     ctx.stroke();
     ctx.restore();
   }
@@ -436,71 +436,118 @@ class JoeyPlayer {
     ctx.save();
     ctx.translate(this.x, this.y);
     ctx.scale(scaleX, scaleY);
-    ctx.lineWidth = 4;
     ctx.strokeStyle = "#26324a";
+    ctx.lineWidth = 3;
+    ctx.lineJoin = "round";
+    ctx.lineCap = "round";
 
+    // TAIL — thick at base, tapers to tip; drawn first so body covers the join
     ctx.fillStyle = "#b8733f";
     ctx.beginPath();
-    ctx.moveTo(16, 26);
-    ctx.quadraticCurveTo(48, 26, 62, 48);
-    ctx.quadraticCurveTo(34, 42, 10, 32);
+    ctx.moveTo(14, 24);
+    ctx.bezierCurveTo(44, 22, 64, 40, 64, 58);
+    ctx.bezierCurveTo(54, 66, 36, 54, 18, 42);
+    ctx.bezierCurveTo(10, 36, 8, 30, 10, 26);
+    ctx.closePath();
     ctx.fill();
     ctx.stroke();
 
-    ctx.fillStyle = "#c98343";
+    // HIND FEET — drawn before body so body fill covers the overlap
+    ctx.fillStyle = "#b8733f";
     ctx.beginPath();
-    ctx.ellipse(-18, 34, 13, 8, -0.35, 0, Math.PI * 2);
-    ctx.ellipse(18, 34, 13, 8, 0.35, 0, Math.PI * 2);
+    ctx.ellipse(-17, 43, 15, 8, -0.2, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.ellipse(14, 43, 15, 8, 0.2, 0, Math.PI * 2);
     ctx.fill();
     ctx.stroke();
 
+    // BODY — fill paints over interior strokes from tail and feet
     ctx.fillStyle = "#c98343";
     ctx.beginPath();
     ctx.ellipse(0, 14, 24, 31, 0, 0, Math.PI * 2);
     ctx.fill();
     ctx.stroke();
 
+    // BELLY
     ctx.fillStyle = "#efb56b";
     ctx.beginPath();
-    ctx.ellipse(0, 18, 13, 16, 0, 0, Math.PI * 2);
+    ctx.ellipse(0, 18, 13, 20, 0, 0, Math.PI * 2);
     ctx.fill();
 
+    // ARMS — small forearms, one each side
     ctx.fillStyle = "#c98343";
     ctx.beginPath();
-    ctx.ellipse(-16, -39, 8, 31, -0.24, 0, Math.PI * 2);
-    ctx.ellipse(16, -39, 8, 31, 0.24, 0, Math.PI * 2);
+    ctx.ellipse(-27, 5, 7, 12, -0.5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.ellipse(27, 5, 7, 12, 0.5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+
+    // EARS — drawn before head so head covers the base
+    ctx.fillStyle = "#c98343";
+    ctx.beginPath();
+    ctx.ellipse(-15, -40, 8, 27, -0.2, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.ellipse(15, -40, 8, 27, 0.2, 0, Math.PI * 2);
     ctx.fill();
     ctx.stroke();
     ctx.fillStyle = "#f0b878";
     ctx.beginPath();
-    ctx.ellipse(-16, -39, 3.5, 20, -0.24, 0, Math.PI * 2);
-    ctx.ellipse(16, -39, 3.5, 20, 0.24, 0, Math.PI * 2);
+    ctx.ellipse(-15, -40, 3.5, 17, -0.2, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.ellipse(15, -40, 3.5, 17, 0.2, 0, Math.PI * 2);
     ctx.fill();
 
+    // HEAD — covers ear bases
     ctx.fillStyle = "#d99450";
     ctx.beginPath();
-    ctx.ellipse(0, -14, 23, 22, 0, 0, Math.PI * 2);
+    ctx.ellipse(0, -13, 23, 22, 0, 0, Math.PI * 2);
     ctx.fill();
     ctx.stroke();
 
-    ctx.fillStyle = "#a86439";
+    // MUZZLE
+    ctx.fillStyle = "#efb56b";
     ctx.beginPath();
-    ctx.ellipse(0, -7, 7, 5, 0, 0, Math.PI * 2);
+    ctx.ellipse(1, -3, 12, 9, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+
+    // NOSE
+    ctx.fillStyle = "#7a3f1e";
+    ctx.beginPath();
+    ctx.ellipse(1, -8, 5.5, 3.5, 0, 0, Math.PI * 2);
     ctx.fill();
 
+    // EYES
     ctx.fillStyle = "#ffffff";
     ctx.beginPath();
-    ctx.arc(-8, -18, 6, 0, Math.PI * 2);
-    ctx.arc(9, -18, 6, 0, Math.PI * 2);
+    ctx.arc(-8, -19, 6, 0, Math.PI * 2);
     ctx.fill();
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(9, -19, 6, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
     ctx.fillStyle = "#26324a";
     ctx.beginPath();
-    ctx.arc(-7, -17, 2.4, 0, Math.PI * 2);
-    ctx.arc(10, -17, 2.4, 0, Math.PI * 2);
+    ctx.arc(-7, -18, 2.5, 0, Math.PI * 2);
     ctx.fill();
     ctx.beginPath();
-    ctx.arc(1, -6, 8, 0.15, Math.PI - 0.15);
+    ctx.arc(10, -18, 2.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // SMILE
+    ctx.beginPath();
+    ctx.arc(1, -2, 7, 0.25, Math.PI - 0.25);
     ctx.stroke();
+
     ctx.restore();
   }
 }

@@ -40,12 +40,17 @@ class GameUI {
     drawSoftBackdrop(ctx, "#78d8ff", "#87d96a");
     drawClouds(ctx, time);
     drawPanel(ctx, 150, 58, 600, 590, "#fff9df");
-    ctx.fillStyle = "#ff6f61";
-    ctx.font = "900 76px Impact";
+    ctx.font = "900 80px Impact";
+    ctx.strokeStyle = "#a03000";
+    ctx.lineWidth = 6;
+    ctx.lineJoin = "round";
+    ctx.strokeText("JOEY - THE GAME", 450, 165);
+    const titleGrad = ctx.createLinearGradient(130, 130, 770, 130);
+    titleGrad.addColorStop(0,   "#ff6f61");
+    titleGrad.addColorStop(0.5, "#ffd700");
+    titleGrad.addColorStop(1,   "#ff6f61");
+    ctx.fillStyle = titleGrad;
     ctx.fillText("JOEY - THE GAME", 450, 165);
-    ctx.fillStyle = "#26324a";
-    ctx.font = "900 24px Trebuchet MS";
-    ctx.fillText("Help Joey hop across", 450, 214);
     drawJoeyMascot(ctx, 450, 340 + Math.sin(time * 4) * 10, 1.45);
     this.drawButton(ctx, 322, 474, 256, 58, "Start Game");
     this.drawButton(ctx, 322, 548, 256, 58, "Instructions");
@@ -65,6 +70,8 @@ class GameUI {
       "Avoid bad stuff.",
       "Logs are safe and carry Joey across water.",
       "Help Joey hop across.",
+      "Press M to toggle music on or off.",
+      "Each row forward earns points — you never lose any.",
     ];
     lines.forEach((line, i) => ctx.fillText(line, 450, 245 + i * 42));
     this.drawButton(ctx, 322, 594, 256, 58, "Back");
@@ -139,6 +146,16 @@ class GameUI {
       ctx.fillText(ch, jx, 280 + bounce);
       jx += cw;
     });
+    ctx.restore();
+
+    ctx.save();
+    ctx.textAlign = "center";
+    ctx.font = "italic 15px Trebuchet MS";
+    ctx.fillStyle = "rgba(255,255,255,0.92)";
+    ctx.strokeStyle = "#26324a";
+    ctx.lineWidth = 2.5;
+    ctx.strokeText("By the way, you scored a hundred billion zillon points 😎😂", 450, 606);
+    ctx.fillText("By the way, you scored a hundred billion zillon points 😎😂", 450, 606);
     ctx.restore();
 
     // 4 dancing squirrels flanking the replay button
