@@ -92,7 +92,6 @@ class Log extends Entity {
 
   update(dt, width) {
     this.x += this.speed * dt;
-    this.phase += dt * 8;
     if (this.speed > 0 && this.x > width + this.w) this.x -= this.stride;
     if (this.speed < 0 && this.x < -this.w) this.x += this.stride;
   }
@@ -329,7 +328,6 @@ class Motorcycle extends Entity {
 
     drawWheel(ctx, this.w * 0.2, this.h - 14, spin);
     drawWheel(ctx, this.w * 0.8, this.h - 14, spin);
-    ctx.strokeStyle = "#26324a";
     ctx.lineWidth = 5;
     ctx.beginPath();
     ctx.moveTo(this.w * 0.2, this.h - 14);
@@ -353,7 +351,6 @@ class Motorcycle extends Entity {
     ctx.arc(this.w * 0.5, this.h * 0.13, 12, 0, Math.PI * 2);
     ctx.fill();
     ctx.stroke();
-    ctx.strokeStyle = "#26324a";
     ctx.beginPath();
     ctx.moveTo(this.w * 0.50, this.h * 0.22);
     ctx.lineTo(this.w * 0.70, this.h * 0.28);

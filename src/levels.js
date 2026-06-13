@@ -12,7 +12,7 @@ const LEVELS = [
       text: "#26324a",
     },
     rows: [
-      { type: "safe", label: "surprise" },
+      { type: "safe" },
       { type: "river", speed: 52, logs: [{ x: 40, w: 170 }, { x: 360, w: 150 }, { x: 680, w: 180 }] },
       { type: "river", speed: -44, logs: [{ x: 160, w: 190 }, { x: 520, w: 160 }] },
       { type: "road", hazards: [{ kind: "truck", x: 120, w: 86, speed: 70 }, { kind: "motorcycle", x: 520, w: 104, speed: 88 }] },
@@ -36,7 +36,7 @@ const LEVELS = [
       text: "#fff9df",
     },
     rows: [
-      { type: "safe", label: "surprise" },
+      { type: "safe" },
       { type: "river", speed: 72, logs: [{ x: 10, w: 150 }, { x: 310, w: 180 }, { x: 660, w: 150 }] },
       { type: "road", hazards: [{ kind: "brain", x: 120, w: 72, speed: -86 }, { kind: "brain", x: 480, w: 72, speed: -86 }] },
       { type: "road", hazards: [{ kind: "motorcycle", x: 40, w: 116, speed: 128 }, { kind: "truck", x: 500, w: 116, speed: 106 }] },
@@ -60,7 +60,7 @@ const LEVELS = [
       text: "#26324a",
     },
     rows: [
-      { type: "safe", label: "surprise" },
+      { type: "safe" },
       { type: "river", speed: 85, logs: [{ x: 50, w: 150 }, { x: 330, w: 160 }, { x: 610, w: 150 }] },
       { type: "road", hazards: [{ kind: "brain", x: 90, w: 72, speed: -100 }, { kind: "brain", x: 560, w: 72, speed: -100 }] },
       { type: "road", hazards: [{ kind: "motorcycle", x: 40, w: 112, speed: 140 }, { kind: "truck", x: 420, w: 124, speed: 124 }] },

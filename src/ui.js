@@ -2,6 +2,7 @@ class GameUI {
   constructor(game) {
     this.game = game;
     this.floaters = [];
+    this._rainbowGrad = null;
   }
 
   addFloatingText(text, x, y, color = "#fff9df") {
@@ -103,13 +104,16 @@ class GameUI {
   }
 
   drawVictory(ctx, time) {
-    const rainbow = ctx.createLinearGradient(0, 0, 900, 792);
-    rainbow.addColorStop(0, "#ff637d");
-    rainbow.addColorStop(0.22, "#ffcf4d");
-    rainbow.addColorStop(0.45, "#56d68a");
-    rainbow.addColorStop(0.7, "#35c4e8");
-    rainbow.addColorStop(1, "#8f6cff");
-    ctx.fillStyle = rainbow;
+    if (!this._rainbowGrad) {
+      const g = ctx.createLinearGradient(0, 0, 900, 792);
+      g.addColorStop(0, "#ff637d");
+      g.addColorStop(0.22, "#ffcf4d");
+      g.addColorStop(0.45, "#56d68a");
+      g.addColorStop(0.7, "#35c4e8");
+      g.addColorStop(1, "#8f6cff");
+      this._rainbowGrad = g;
+    }
+    ctx.fillStyle = this._rainbowGrad;
     ctx.fillRect(0, 0, 900, 792);
     drawCelebrationBits(ctx, time);
     drawCongaLine(ctx, 450, 350, time);

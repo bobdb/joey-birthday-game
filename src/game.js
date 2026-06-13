@@ -1,3 +1,20 @@
+const KEY_MAP = {
+  ArrowUp: [0, -1], w: [0, -1], W: [0, -1],
+  ArrowDown: [0, 1], s: [0, 1], S: [0, 1],
+  ArrowLeft: [-1, 0], a: [-1, 0], A: [-1, 0],
+  ArrowRight: [1, 0], d: [1, 0], D: [1, 0],
+  Enter: "action", " ": "action",
+};
+const DIR_MAP = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
+const HAZARD_COLORS = {
+  truck: ["#ff934f", "#ff6f61", "#35c4e8"],
+  snake: ["#7bd957", "#ffe45e", "#ff83cc"],
+  brain: ["#ff8fd7", "#ff71a8", "#f69eff"],
+  penguin: ["#26324a", "#202842", "#35415f"],
+  scientist: ["#fff9df", "#dff6ff", "#f5ebff"],
+  motorcycle: ["#ff637d", "#35c4e8", "#ffcf4d"],
+};
+
 class JoeyGame {
   constructor() {
     this.canvas = document.querySelector("#gameCanvas");
@@ -28,23 +45,7 @@ class JoeyGame {
 
   bindControls() {
     window.addEventListener("keydown", (event) => {
-      const keyMap = {
-        ArrowUp: [0, -1],
-        w: [0, -1],
-        W: [0, -1],
-        ArrowDown: [0, 1],
-        s: [0, 1],
-        S: [0, 1],
-        ArrowLeft: [-1, 0],
-        a: [-1, 0],
-        A: [-1, 0],
-        ArrowRight: [1, 0],
-        d: [1, 0],
-        D: [1, 0],
-        Enter: "action",
-        " ": "action",
-      };
-      const action = keyMap[event.key];
+      const action = KEY_MAP[event.key];
       if (!action) return;
       event.preventDefault();
       if (action === "action") this.activate();
@@ -53,9 +54,7 @@ class JoeyGame {
 
     document.querySelectorAll("[data-dir]").forEach((button) => {
       button.addEventListener("pointerdown", () => {
-        const dir = button.dataset.dir;
-        const moves = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
-        this.tryMove(...moves[dir]);
+        this.tryMove(...DIR_MAP[button.dataset.dir]);
       });
     });
 
@@ -138,15 +137,8 @@ class JoeyGame {
   }
 
   hazardColor(kind, index) {
-    const colors = {
-      truck: ["#ff934f", "#ff6f61", "#35c4e8"],
-      snake: ["#7bd957", "#ffe45e", "#ff83cc"],
-      brain: ["#ff8fd7", "#ff71a8", "#f69eff"],
-      penguin: ["#26324a", "#202842", "#35415f"],
-      scientist: ["#fff9df", "#dff6ff", "#f5ebff"],
-      motorcycle: ["#ff637d", "#35c4e8", "#ffcf4d"],
-    };
-    return colors[kind][index % colors[kind].length];
+    const c = HAZARD_COLORS[kind];
+    return c[index % c.length];
   }
 
   tryMove(dx, dy) {

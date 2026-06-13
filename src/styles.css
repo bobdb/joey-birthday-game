@@ -1,9 +1,6 @@
 :root {
   --ink: #26324a;
   --paper: #fff9df;
-  --sun: #ffd35a;
-  --melon: #ff6f61;
-  --leaf: #5fc97b;
   --sky: #6ecbff;
   --shadow: 0 24px 70px rgba(38, 50, 74, 0.22);
 }
@@ -37,15 +34,6 @@ button {
   padding: 16px 0 28px;
 }
 
-.touch-pad button {
-  border: 3px solid var(--ink);
-  color: var(--ink);
-  background: var(--paper);
-  box-shadow: 4px 4px 0 var(--ink);
-  font-weight: 900;
-  cursor: pointer;
-}
-
 .canvas-wrap {
   display: grid;
   gap: 14px;
@@ -54,7 +42,7 @@ button {
 canvas {
   width: 100%;
   max-height: calc(100vh - 42px);
-  aspect-ratio: 5 / 4;
+  aspect-ratio: 75 / 66;
   display: block;
   border: 4px solid var(--ink);
   background: var(--sky);
@@ -71,6 +59,12 @@ canvas {
 }
 
 .touch-pad button {
+  border: 3px solid var(--ink);
+  color: var(--ink);
+  background: var(--paper);
+  box-shadow: 4px 4px 0 var(--ink);
+  font-weight: 900;
+  cursor: pointer;
   min-height: 54px;
   border-radius: 8px;
   font-size: 1.35rem;
